@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>Login</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename ='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename ='css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename ='css/login.css') }}">
+	<script type="text/javascript" src="{{ url_for('static',filename ='js/jquery.min.js') }}"></script>
+</head>
+
+<body>
+<div class="dowebok" >
+	<div class="container-login100">
+
+		<div class="wrap-login100">
+			<div class="login100-title"><h1 style="font-size: 40px; text-align: center">欢迎来到电影推荐系统</h1></div>
+
+			<div class="login100-pic js-tilt" data-tilt>
+				<img src="{{ url_for('static',filename ='images/bcy.png') }}" alt="IMG" >
+			</div>
+
+			<span class="login100-form-title">
+				用户登录
+			</span>
+
+			<div class="wrap-input100 validate-input">
+				<input class="input100" type="text" id="username" name="username" placeholder="用户名">
+				<span class="focus-input100"></span>
+				<span class="symbol-input100">
+					<i class="fa fa-envelope" aria-hidden="true"></i>
+				</span>
+			</div>
+
+			<div class="wrap-input100 validate-input">
+				<input class="input100" type="password" id="pwd" name="pwd" placeholder="密码">
+				<span class="focus-input100"></span>
+				<span class="symbol-input100">
+					<i class="fa fa-lock" aria-hidden="true"></i>
+				</span>
+			</div>
+
+			<div class="container-login100-form-btn" >
+				<button class="login100-form-btn" id="confirm" name="confirm">
+					登录
+				</button>
+			</div>
+
+
+<!--			<form class="login100-form validate-form">-->
+<!--	-->
+<!--			</form>-->
+		</div>
+	</div>
+</div>
+
+<!--登录验证脚本-->
+<script>
+	var btn = document.querySelector('#confirm');
+	btn.addEventListener('click',function(){
+		var user = document.querySelector('#username');
+		var user_i = user.value;
+		var pwd  = document.querySelector('#pwd');
+		var pwd_i = pwd.value;
+
+		 $.ajax({
+			 url: '/api/user_pwd/' + user_i,
+			 type: "POST",
+			 dataType: "json",
+			 async: false,  //请求方式 设置为异步
+			 success: function(data) {
+				 console.log(data);
+
+				 if (data.pwd != null){
+					if(data.pwd == pwd_i) {
+						alert("登录成功！");
+						location.href = '/login/verify/' + user_i + '/' + '1';
+					}
+					else{
+						alert("密码错误");
+					}
+				 }
+				 else {
+					 alert("不存在该用户！");
+				 }
+			 }
+		 })
+	})
+ </script>
+
+</body>
+</html>

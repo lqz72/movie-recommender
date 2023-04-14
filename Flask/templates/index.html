@@ -1,0 +1,122 @@
+{% extends './base.html'%}
+
+{% block body %}
+
+<div style="color:#000; text-align: center"><h2>欢迎使用电影推荐系统</h2></div>
+</br>
+<div class="container" >
+    <div class="col-xs-6 col-xs-offset-3">
+    	<form class="form-horizontal" role="search" method="get" action=''>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control input-lg " name="query" value="" placeholder= "输入您感兴趣的电影名字"/>
+                    <span class='input-group-btn'>
+                        <button class='button1' type='submit'>搜索</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+ </div>
+
+<p style="text-align:left;">
+    <span style="float:right;">
+        <a href="#" class="btn"><button class="button2" id="update">刷新</button></a>
+        <h2 style="margin-left: 50px">电影列表</h2>
+    </span>
+</p>
+<hr>
+<br>
+
+<!-- Movie list -->
+{% for i in range(3)%}
+<div class="row" id="row">
+    {% for j in range(6)%}
+    <div class="col-sm-2 col-md-2">
+        <div class="thumbnail" style="border-radius: 10px 10px 10px 10px; background-color: transparent; border-color: transparent;">
+            <center><h5 id="movie_name" style="color: black; font-size: 16px">{{movie_list[i*4+j].movie_name}}</h5></center>
+            <a href="/movie/{{movie_list[i*4+j].movie_id}}" id="movie_link">
+                <img src="../static/movies/{{movie_list[i*4+j].movie_id}}.jpg" class="img-responsive" id="movie_img" style="border-radius: 10px 10px 10px 10px;">
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+</br></br></br>
+<p style="text-align:left;">
+    <span style="float:right;">
+        <a href="javascript:void(0)" class="btn"><button class="button2" id="update_rec">推荐</button></a>
+    <h2 style="margin-left: 50px">推荐作品</h2>
+    </span>
+</p>
+<hr>
+<br>
+
+{% for i in range(3)%}
+<div class="row" id="rec_row">
+    {% for j in range(6)%}
+    <div class="col-sm-2 col-md-2">
+        <div class="thumbnail" style="border-radius: 10px 10px 10px 10px; background-color: transparent; border-color: transparent;">
+            <center><h5 id="rec_movie_name" style="color: black; font-size: 16px">{{movie_list[i*4+j].movie_name}}</h5></center>
+            <a href="/movie/{{movie_list[i*4+j].movie_id}}" id="rec_movie_link">
+                <img src="../static/movies/{{movie_list[i*4+j].movie_id}}.jpg" class="img-responsive" id="rec_movie_img" style="border-radius: 10px 10px 10px 10px;">
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<script>
+    var btn = document.querySelector("#update");
+    btn.addEventListener('click',function()
+    {
+        console.log('update movies');
+        var movie_names = document.querySelectorAll('#movie_name')
+        var movie_links = document.querySelectorAll('#movie_link')
+        var movie_imgs = document.querySelectorAll('#movie_img')
+
+        $.ajax({
+            type:'get',
+            url:'/api/random_movie',
+            success: function(data)
+            {
+                for(var i in data){
+                    movie_names[i].innerHTML = data[i]['movie_name']
+                    movie_links[i].href = '/movie/' + data[i]['movie_id']
+                    movie_imgs[i].src = '../static/movies/' + data[i]['movie_id'] + '.jpg'
+                    console.log(data[i]['movie_id'])
+                }
+            }
+        })
+    })
+
+    var btn = document.querySelector("#update_rec");
+    btn.addEventListener('click',function()
+    {
+        console.log('update recommendation movies');
+        var movie_names = document.querySelectorAll('#rec_movie_name')
+        var movie_links = document.querySelectorAll('#rec_movie_link')
+        var movie_imgs = document.querySelectorAll('#rec_movie_img')
+
+        $.ajax({
+            type:'get',
+            url:'/api/recommend/18',
+            success: function(data)
+            {
+                console.log(data)
+                for(var i in data){
+                    movie_names[i].innerHTML = data[i]['movie_name']
+                    movie_links[i].href = '/movie/' + data[i]['movie_id']
+                    movie_imgs[i].src = '../static/movies/' + data[i]['movie_id'] + '.jpg'
+                    console.log(data[i]['movie_id'])
+                }
+            }
+        })
+    })
+</script>
+{% endblock %}
+
+
