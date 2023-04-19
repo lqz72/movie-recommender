@@ -131,14 +131,21 @@ class DBManager(object):
             if len(data) > 0:
                 return {
                     'movie_id': data[0][0],
-                    'movie_name': data[0][1],
+                    'movie_name': data[0][1].split('(')[0],
                     'date': data[0][2],
                     'url': data[0][3],
-                    'class': data[0][4],
+                    'class': data[0][4].split('|'),
+                    'rating': data[0][5].split('|'),
+                    'pop': data[0][6].split('|'),
+                    'desc': data[0][7],
+                    'director': data[0][8].split('|'),
+                    'writer': data[0][9].split('|'),
+                    'star': data[0][10].split('|'),
                 }
 
         except Exception as e:
             print('error:', e)
+            print(movie_id)
             conn.rollback()
             conn.close()
 
@@ -198,5 +205,10 @@ class DBManager(object):
 
 if __name__ == '__main__':
     manager = DBManager()
-    df = manager.add_curr_user2db(5, 1)
-    print(df)
+    movie_df = manager.get_df_data('movie_info')
+    keyword = 'Casper'
+
+    res = movie_df[movie_df['movie_name'].str.contains(keyword)]
+    if len(res) > 0:
+        print(res['movie_id'].values[0])
+    # print(res)

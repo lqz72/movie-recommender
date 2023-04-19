@@ -1,32 +1,124 @@
-{% extends 'recommend/base.html'%}
-{% block title %}Recommendations{% endblock %}
-{% block body %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<div class="container-fluid">
-	<h2>Recommendations for you</h2>
-</div>
-<hr>
-<br>
+    <title>{% block title %}Movies{% endblock title %}</title>
 
-	<div class="container-fluid">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename ='css/bootstrap.min.css') }}">
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='css/base.css') }}" />
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='css/imdb.css') }}" />
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='layui/css/layui.css') }}" />
 
-    <!-- Movie list -->
-    <div class="row">
-            {% if movie_list %}
-                {% for movie in movie_list %}
-                    <div class="col-sm-2 col-md-2 ">
-                        <div class="thumbnail" style="border-radius: 22px 22px 22px 22px;">
-                            <center><h4>{{movie.title}}</h4></center>
-                            <a href="{% url 'detail' movie.id %}">
-                                <img src="{{ movie.movie_logo.url}}" class="img-responsive" style="border-radius: 22px 22px 22px 22px;">
-                            </a>
-<!--                            <center><h5>{{movie.genre}}</h5></center>-->
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
+    <style type="text/css">
+        .thumbnail p, .thumbnail h4 {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            }
+    </style>
+</head>
+
+<body>
+    <ul class="layui-nav" lay-filter="">
+      <li class="layui-nav-item"><a href="/">主页</a></li>
+      <li class="layui-nav-item layui-this"><a href="/recommend">电影推荐</a></li>
+      <li class="layui-nav-item"><a href="#">电影详情</a></li>
+      <li class="layui-nav-item">
+        <a href=""><img src="{{ url_for('static',filename ='images/bcy.png') }}" class="layui-nav-img">我</a>
+        <dl class="layui-nav-child">
+          <dd><a href="javascript:;">修改信息</a></dd>
+          <dd><a href="javascript:;">安全管理</a></dd>
+          <dd><a href="javascript:;">退了</a></dd>
+        </dl>
+      </li>
+    </ul>
+
+    <!-- Main Body Begin -->
+    <div style="color:#000; text-align: center"><h2>欢迎使用电影推荐系统</h2></div>
+    </br>
+
+    <!-- Recommend Movie list -->
+    <p style="text-align:left;">
+        <span style="float:right;">
+            <a href="javascript:void(0)" class="btn"><button class="button2" id="update_rec">推荐</button></a>
+        <h2 style="margin-left: 50px">推荐作品</h2>
+        </span>
+    </p>
+    <hr>
+    <br>
+
+    {% for i in range(3)%}
+    <div class="row" id="rec_row">
+        {% for j in range(6)%}
+        <div class="col-sm-2 col-md-2">
+            <div class="thumbnail" style="border-radius: 10px 10px 10px 10px; background-color: transparent; border-color: transparent;">
+                <center><h5 id="rec_movie_name" style="color: black; font-size: 16px">{{movie_list[i*4+j].movie_name}}</h5></center>
+                {%if (movie_list[i*4+j].movie_name | length) <= 31 %}
+                    </br>
+                {% endif %}
+                <a href="/movie/{{movie_list[i*4+j].movie_id}}" id="rec_movie_link">
+                    <img src="../static/movies/{{movie_list[i*4+j].movie_id}}.jpg" class="img-responsive" id="rec_movie_img" style="height: 300px; width: 200px; border-radius: 10px 10px 10px 10px;">
+                </a>
+            </div>
         </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <!-- Main Body End -->
 
-</div>
+    <nav class="navbar navbar-bottom">
+    <footer class="page-footer font-small">
+        <hr>
+          <div class="text-center center-block">
+            <br />
+          </div>
+    </footer>
+    </nav>
 
-{% endblock %}
+	<script type="text/javascript" src="{{ url_for('static',filename ='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename ='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename ='layui/layui.js') }}"></script>
+
+    <script>
+        layui.use('element', function(){
+          var element = layui.element;
+
+          //一些事件触发
+          element.on('tab(demo)', function(data){
+            console.log(data);
+          });
+        })
+
+        var btn = document.querySelector("#update_rec");
+        btn.addEventListener('click',function()
+        {
+            console.log('update recommendation movies');
+            var movie_names = document.querySelectorAll('#rec_movie_name')
+            var movie_links = document.querySelectorAll('#rec_movie_link')
+            var movie_imgs = document.querySelectorAll('#rec_movie_img')
+
+            $.ajax({
+                type:'get',
+                url:'/api/recommend/18',
+                success: function(data)
+                {
+                    console.log(data)
+                    for(var i in data){
+                        movie_names[i].innerHTML = data[i]['movie_name']
+                        movie_links[i].href = '/movie/' + data[i]['movie_id']
+                        movie_imgs[i].src = '../static/movies/' + data[i]['movie_id'] + '.jpg'
+                        console.log(data[i]['movie_id'])
+                    }
+                }
+            })
+        })
+    </script>
+
+</body>
+</html>
+
+
+

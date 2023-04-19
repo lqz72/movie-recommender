@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>{% block title %}Movies{% endblock title %}</title>
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename ='css/bootstrap.min.css') }}">
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='css/base.css') }}" />
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='css/imdb.css') }}" />
+    <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename ='layui/css/layui.css') }}" />
+
+    <style type="text/css">
+        body {
+            background-color: white;
+        }
+        .thumbnail p, .thumbnail h4 {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+    <ul class="layui-nav" lay-filter="">
+      <li class="layui-nav-item"><a href="/">主页</a></li>
+      <li class="layui-nav-item layui-this"><a href="#">电影详情</a></li>
+      <li class="layui-nav-item"><a href="#">大数据分析</a></li>
+      <li class="layui-nav-item"><a href="https://github.com/lqz72/movie-recommender">Github主页</a></li>
+    </ul>
+    </br>
+    <div class="container-fluid col-sm-offset-1">
+        <div class="row" style="margin: 0">
+            <!-- Left Movie Info -->
+            <div class="col-sm-2 col-md-3" >
+                <div class="thumbnail" style="border-radius: 10px 10px 10px 10px; background-color: transparent; border-color: transparent;">
+                  <a href="#">
+                            <img src="../static/movies/{{movie.movie_id}}.jpg" class="img-responsive" style="border-radius: 22px 22px 22px 22px;">
+                        </a>
+                    <h2></h2>
+                </div>
+            </div>
+
+            <!-- Right Movie Info -->
+            <div class="col-sm-offset-1 col-sm-4 col-md-4" style="margin-left: 50px">
+                <div class="kRUqXl">
+                    <div><h1 style="font-size: 40px; margin-bottom: 20px; color: dimgray"><span>{{movie.movie_name}}</span></h1></div>
+
+                    <div class="kKSYln">
+                        <div data-testid="hero-rating-bar__aggregate-rating" class="sc-acdbf0f3-0 glkvwr rating-bar__base-button" >
+                            <div class="sc-acdbf0f3-1 grulzS" style="color: gray; font-weight: bold">IMDB 排名</div>
+                            <a class="ipc-btn ipc-btn--single-padding ipc-btn--center-align-content ipc-btn--default-height ipc-btn--core-baseAlt ipc-btn--theme-baseAlt ipc-btn--on-textPrimary ipc-text-button sc-acdbf0f3-2 tBSnU" role="button" tabindex="0" aria-label="View User Ratings" aria-disabled="false">
+                                <span class="ipc-btn__text">
+                                    <div class="sc-acdbf0f3-3 kpRihV">
+                                        <div class="sc-acdbf0f3-4 irbwHq">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ggvDm" id="iconContext-star" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path></svg>
+                                        </div>
+                                        <div class="sc-bde20123-0 gtEgaf">
+                                            <div data-testid="hero-rating-bar__aggregate-rating__score" class="sc-bde20123-2 gYgHoj"><span class="sc-bde20123-1 iZlgcd" style="color: gray;font-size: 25px; font-weight:bold">{{movie['rating'][0]}}</span><span style="color: gray; font-size: 20px;">/<!-- -->10</span></div>
+                                            <div class="sc-bde20123-5 ckpQha"></div>
+                                            <div class="sc-bde20123-3 bjjENQ" style="color: gray;">{{movie['rating'][1]}}</div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </a>
+                        </div>
+
+                        <div data-testid="hero-rating-bar__popularity" class="sc-acdbf0f3-0 glkvwr rating-bar__base-button">
+                            <div class="sc-acdbf0f3-1 grulzS" style="color: gray; font-weight: bold">流行趋势</div>
+                            <a class="ipc-btn ipc-btn--single-padding ipc-btn--center-align-content ipc-btn--default-height ipc-btn--core-baseAlt ipc-btn--theme-baseAlt ipc-btn--on-textPrimary ipc-text-button sc-acdbf0f3-2 tBSnU" role="button" tabindex="0" aria-label="View Popular Movies" aria-disabled="false" href="/chart/moviemeter/?ref_=tt_ov_pop">
+                                <span class="ipc-btn__text">
+                                    <div class="sc-acdbf0f3-3 kpRihV">
+                                        <div class="sc-acdbf0f3-4 irbwHq">
+                                            {% if movie['pop'][1] == 'up' %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--popularity-up sc-5f7fb5b4-3 hSsfDN" id="iconContext-popularity-up" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-2.6 0-5-1.3-6.4-3.3l2.8-3.4 1.3 1.5c.4.4 1 .4 1.3 0l2.9-3.2 1.3 1.4c.3.3.8.1.8-.3V8.5c0-.3-.2-.5-.5-.5h-4c-.4 0-.6.5-.3.8l1.3 1.4-2.2 2.5L9 11.3c-.4-.4-1-.4-1.3 0L4.6 15c-.4-.9-.6-1.9-.6-3 0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8z"></path></svg>
+                                            {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--popularity-down sc-5f7fb5b4-4 hNmaod" id="iconContext-popularity-down" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8 0-1.4.4-2.8 1-3.9L8.4 12c.4.4 1 .4 1.4 0l1.4-1.5 2.4 2.6-1.4 1.4c-.3.3-.1.9.4.9h4.3c.3 0 .5-.2.5-.5v-4.3c0-.4-.5-.7-.9-.3L15 11.6l-3.1-3.3c-.4-.4-1-.4-1.4 0L9.2 9.8 6.3 6.4C7.7 4.9 9.7 4 12 4c4.4 0 8 3.6 8 8s-3.6 8-8 8z"></path></svg>
+                                            {% endif %}
+                                        </div>
+                                        <div data-testid="hero-rating-bar__popularity__down" class="sc-5f7fb5b4-0 cUcPIU">
+                                            <div data-testid="hero-rating-bar__popularity__score" class="sc-5f7fb5b4-1 bhuIgW" style="color: gray;font-size: 25px; font-weight:bold">{{movie['pop'][0]}}</div>
+                                            <div data-testid="hero-rating-bar__popularity__delta" class="sc-5f7fb5b4-2 iIbRcm" style="color: gray; font-size: 15px">
+                                            {% if movie['pop'][1] == 'up' %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--arrow-drop-up sc-5f7fb5b4-6 bDDxMZ" id="iconContext-arrow-drop-up" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.71 12.29L11.3 9.7a.996.996 0 0 1 1.41 0l2.59 2.59c.63.63.18 1.71-.71 1.71H9.41c-.89 0-1.33-1.08-.7-1.71z"></path></svg>{{movie['pop'][2]}}</div>
+                                            {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--arrow-drop-down sc-5f7fb5b4-6 bDDxMZ" id="iconContext-arrow-drop-down" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.71 11.71l2.59 2.59c.39.39 1.02.39 1.41 0l2.59-2.59c.63-.63.18-1.71-.71-1.71H9.41c-.89 0-1.33 1.08-.7 1.71z"></path></svg>{{movie['pop'][2]}}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {% for c in movie.class%}
+                    <a class="ipc-chip ipc-chip--on-baseAlt" role="button" tabindex="0" aria-disabled="false" style="border-color: green"><span class="ipc-chip__text" style="color: green">{{c}}</span></a> &nbsp;
+                {% endfor %}
+                </br></br>
+
+                <p><span style="font-size: 18px; font-style: italic; color: gray">"{{movie.desc}}"</span></p>
+                </br>
+
+                <ul style="padding: 0">
+                    <li role="presentation" class="ipc-metadata-list__item" data-testid="title-pc-principal-credit" style="border-color: gray; border-top-width: 1px; border-top-style: solid;">
+                        <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray; font-weight: bold">导演</span>
+                        <div class="ipc-metadata-list-item__content-container">
+                            <ul class="ipc-inline-list ipc-inline-list--show-dividers ipc-inline-list--inline ipc-metadata-list-item__list-content baseAlt" role="presentation">
+                                <li role="presentation" class="ipc-inline-list__item">
+                                    {% for director in movie.director%}
+                                    <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray">{{director}}</span>
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li role="presentation" class="ipc-metadata-list__item" data-testid="title-pc-principal-credit" style="border-color: gray; border-top-width: 1px; border-top-style: solid;">
+                    <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray; font-weight: bold">作者</span>
+                    <div class="ipc-metadata-list-item__content-container">
+                        <ul class="ipc-inline-list ipc-inline-list--show-dividers ipc-inline-list--inline ipc-metadata-list-item__list-content baseAlt" role="presentation">
+                            <li role="presentation" class="ipc-inline-list__item">
+                                {% for writer in movie.writer%}
+                                <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray">{{writer}}</span>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                    <li role="presentation" class="ipc-metadata-list__item" data-testid="title-pc-principal-credit" style="border-color: gray; border-top-width: 1px; border-top-style: solid;">
+                    <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray; font-weight: bold">明星</span>
+                    <div class="ipc-metadata-list-item__content-container">
+                        <ul class="ipc-inline-list ipc-inline-list--show-dividers ipc-inline-list--inline ipc-metadata-list-item__list-content baseAlt" role="presentation">
+                            <li role="presentation" class="ipc-inline-list__item">
+                                {% for star in movie.star%}
+                                <span class="ipc-metadata-list-item__label ipc-metadata-list-item__label--btn" aria-label="See full cast and crew" aria-disabled="false" style="color: gray">{{star}}</span>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                </ul>
+
+
+                </br>
+                <div>
+                    <a data-testid="tm-box-pwo-btn" class="ipc-btn ipc-btn--full-width ipc-btn--center-align-content ipc-btn--large-height ipc-btn--core-accent1 ipc-btn--theme-baseAlt sc-cd562886-0 hZQsGi" role="button" tabindex="0" aria-disabled="false" target="_blank" href="{{movie.url}}", id="movie_url" style="width: 50%;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--play-circle-outline ipc-btn__icon ipc-btn__icon--pre" id="iconContext-play-circle-outline" viewBox="0 0 24 24" fill="currentColor" role="presentation"><path d="M10.8 15.9l4.67-3.5c.27-.2.27-.6 0-.8L10.8 8.1a.5.5 0 0 0-.8.4v7c0 .41.47.65.8.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                    <span>点击前往电影主页！</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-bottom">
+
+    <footer class="page-footer font-small">
+        <hr>
+          <div class="text-center center-block">
+            <br />
+        </div>
+    </footer>
+    </nav>
+
+	<script type="text/javascript" src="{{ url_for('static',filename ='js/jquery.min.js') }}"></script>
+
+	<script type="text/javascript" src="{{ url_for('static',filename ='js/bootstrap.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static',filename ='layui/layui.js') }}"></script>
+
+    <script>
+        layui.use('element', function(){
+          var element = layui.element;
+
+          //一些事件触发
+          element.on('tab(demo)', function(data){
+            console.log(data);
+          });
+        })
+    </script>
+
+</body>
+</html>
+
+
+
+
+

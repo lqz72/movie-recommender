@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import torch
 import torch.nn as nn
 
@@ -63,40 +64,6 @@ class MFModel(TowerModel):
 
         loss = torch.mean(output)
         return loss
-
-    def loss_nodebias(self, pos_score, neg_score, epoch=0, batch_idx=0, flag=None):
-        # pos_score : B
-        # neg_score : B x neg_sample
-        new_pos = pos_score
-        new_neg = neg_score
-
-        if new_pos.dim() < new_neg.dim():
-            new_pos.unsqueeze_(-1)
-        partition = torch.cat([new_pos, new_neg], dim=-1)  # B x (B + 1)
-        output = torch.logsumexp(partition, dim=-1, keepdim=True) - new_pos
-        loss = torch.mean(output)
-
-        return loss
-
-    def aug_loss(self, pos_score, log_pos_prob, neg_score, epoch=0, batch_idx=0, flag=None):
-        # pos_score : B
-        # neg_score : B x neg_sample
-        new_pos = pos_score - log_pos_prob.detach()
-        new_neg = neg_score
-
-        if new_pos.dim() < new_neg.dim():
-            new_pos.unsqueeze_(-1)
-        partition = torch.cat([new_pos, new_neg], dim=-1)  # B x (B + 1)
-        output = torch.logsumexp(partition, dim=-1, keepdim=True) - new_pos
-
-        loss = torch.mean(output)
-        return loss
-
-    def mixure_loss(self, loss, aug_loss, mode, gamma, epoch=0, batch_idx=0):
-        if mode == 0:
-            return loss + gamma * aug_loss
-        else:
-            return (1 - gamma) * loss + gamma * aug_loss
 
 
 if __name__ == '__main__':

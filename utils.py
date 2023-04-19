@@ -82,20 +82,19 @@ def csv2db():
         'charset': 'utf8mb4',
     }
 
-    csv_path = 'dataset/user_info.csv'
-    data = pd.read_csv(csv_path)
-    print(data)
+    csv_path = 'dataset/merged_movie_info.csv'
+    data = pd.read_csv(csv_path, encoding='utf-8')
 
     engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}?charset={}".format(
         config['user'], config['passwd'], config['host'], config['port'], config['db'], config['charset']
     ))
 
-    data.to_sql(name='user_info', con=engine, if_exists='append', index=False, index_label=False)
+    data.to_sql(name='movie_info', con=engine, if_exists='append', index=False, index_label=False)
 
 
 if __name__ == '__main__':
     # user2csv()
-    # item2csv()
-    csv2db()
-
+    # movie2csv()
+    # csv2db()
+    pass
 

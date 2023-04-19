@@ -1,11 +1,9 @@
-from Recommender.model import MFModel
+# -*- coding: utf-8 -*-
 import os
 import sys
 import numpy as np
 import torch
-
-ROOT_PATH = os.path.abspath(os.path.dirname(__file__)).split('Recommender')[0] + 'Recommender'
-sys.path.append(ROOT_PATH)
+from model import MFModel
 
 
 class MovieRecommender:
