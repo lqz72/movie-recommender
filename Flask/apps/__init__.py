@@ -33,11 +33,9 @@ def create_app():
 
     @app.before_request
     def my_before_request():
-        require_login_path = ['index', 'recommend', 'movie']
+        require_login_path = ['', 'index', 'recommend', 'movie']
         url_head = request.path.split('/')[1]
 
-        if url_head in ['api']:
-            return
         if url_head in require_login_path:
             utype = session.get('utype', None)
             if not utype:

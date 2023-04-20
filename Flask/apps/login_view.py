@@ -7,22 +7,20 @@ from flask import Blueprint
 from Recommender.mysql import DBManager
 import api_view
 
-login_bp = Blueprint('login_bp', __name__, url_prefix='/login')
+login_bp = Blueprint('login_bp', __name__)
 
 
-@login_bp.route('/')
+@login_bp.route('/login')
 def login():
     return render_template('login.html')
 
 
-@login_bp.route('/verify/<uid>/<utype>')
-def verify(uid, utype):
-    response = redirect(url_for('index_bp.index'))
+@login_bp.route('/logout')
+def logout():
+    if session.get('uid'):
+        session.pop('uid')
+        session.pop('utype')
+    return render_template('login.html')
 
-    session['uid'] = uid
-    session['utype'] = utype
-    response.set_cookie('utype', utype, max_age=60*60*24)
 
-    api_view.db_manager.add_curr_user2db(user_id=uid, user_type=utype)
-    return response
 

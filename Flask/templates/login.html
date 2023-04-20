@@ -75,7 +75,7 @@
 				 if (data.pwd != null){
 					if(data.pwd == pwd_i) {
 						alert("登录成功！");
-						location.href = '/login/verify/' + user_i + '/' + '1';
+						window.location.href = '/api/add_session/' + user_i + '/' + '1';
 					}
 					else{
 						alert("密码错误");

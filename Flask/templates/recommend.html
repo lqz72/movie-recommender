@@ -25,16 +25,15 @@
     <ul class="layui-nav" lay-filter="">
       <li class="layui-nav-item"><a href="/">主页</a></li>
       <li class="layui-nav-item layui-this"><a href="/recommend">电影推荐</a></li>
-      <li class="layui-nav-item"><a href="#">电影详情</a></li>
       <li class="layui-nav-item">
         <a href=""><img src="{{ url_for('static',filename ='images/bcy.png') }}" class="layui-nav-img">我</a>
         <dl class="layui-nav-child">
-          <dd><a href="javascript:;">修改信息</a></dd>
-          <dd><a href="javascript:;">安全管理</a></dd>
-          <dd><a href="javascript:;">退了</a></dd>
+            <dd style="font-size: 16px; height: 32px; text-align: center; padding: 6px"><a href="javascript:;">修改信息</a></dd>
+            <dd style="font-size: 16px; height: 32px; text-align: center; padding: 6px"><a href="/logout">退出登录</a></dd>
         </dl>
       </li>
     </ul>
+    </br></br>
 
     <!-- Main Body Begin -->
     <div style="color:#000; text-align: center"><h2>欢迎使用电影推荐系统</h2></div>
@@ -102,7 +101,7 @@
 
             $.ajax({
                 type:'get',
-                url:'/api/recommend/18',
+                url:'/recommend/18',
                 success: function(data)
                 {
                     console.log(data)

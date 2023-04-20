@@ -71,7 +71,7 @@ class DBManager(object):
         conn = self.connect_to_db()
 
         try:
-            sql = 'SELECT * from user_info WHERE `user_id` = "%s"' % user_id
+            sql = 'SELECT * FROM user_info WHERE `user_id` = "%s"' % user_id
             cursor = conn.cursor()
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -98,7 +98,7 @@ class DBManager(object):
         conn = self.connect_to_db()
 
         try:
-            sql = 'SELECT pwd from user_login_info WHERE `username` = "%s"' % username
+            sql = 'SELECT pwd FROM user_login_info WHERE `username` = "%s"' % username
             cursor = conn.cursor()
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -122,7 +122,7 @@ class DBManager(object):
         conn = self.connect_to_db()
 
         try:
-            sql = 'SELECT * from movie_info WHERE `movie_id` = "%s"' % movie_id
+            sql = 'SELECT * FROM movie_info WHERE `movie_id` = "%s"' % movie_id
             cursor = conn.cursor()
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -156,7 +156,7 @@ class DBManager(object):
         """
         conn = self.connect_to_db()
         try:
-            sql = 'SELECT * from curr_user_info'
+            sql = 'SELECT * FROM curr_user_info'
             cursor = conn.cursor()
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -184,7 +184,7 @@ class DBManager(object):
         """
         conn = self.connect_to_db()
         try:
-            sql = 'SELECT * from curr_user_info'
+            sql = 'SELECT * FROM curr_user_info'
             cursor = conn.cursor()
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -195,6 +195,23 @@ class DBManager(object):
                     'user_id': data[0][0],
                     'user_type': data[0][1]
                 }
+
+        except Exception as e:
+            print('error:', e)
+            conn.rollback()
+            conn.close()
+        return 'UnKnow'
+
+    def remove_login_info(self, uid):
+        """ Reomve current user login information from database
+        """
+        conn = self.connect_to_db()
+        try:
+            sql = 'DELETE FROM curr_user_info WHERE `user_id` = "%s"' % uid
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+            conn.close()
 
         except Exception as e:
             print('error:', e)
